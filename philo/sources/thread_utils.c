@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   thread_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fle-tolg  <fle-tolg@student.42angouleme    +#+  +:+       +#+        */
+/*   By: fle-tolg <fle-tolg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/08 15:53:00 by fle-tolg          #+#    #+#             */
-/*   Updated: 2022/12/21 15:12:10 by fle-tolg         ###   ########.fr       */
+/*   Updated: 2023/01/07 11:43:11 by fle-tolg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,8 @@ void	join_all_thread(t_table *table)
 
 	i = 0;
 	pthread_join(table->death, NULL);
-	pthread_join(table->all_eat, NULL);
+	if (table->max_meat != -1)
+		pthread_join(table->all_eat, NULL);
 	while (i < table->total_philo)
 	{
 		pthread_join(table->thread[i], NULL);
@@ -69,7 +70,7 @@ void	*all_eat_check(void *arg)
 	while (t->is_all_philo_alive == 1)
 	{
 		pthread_mutex_unlock(&t->death_check);
-		usleep(10000);
+		usleep(1000);
 		if (loop_check_eat(t) == 1)
 			return (0);
 		pthread_mutex_lock(&t->death_check);
@@ -85,7 +86,7 @@ void	loop_death(t_table *table, int i)
 	table->is_all_philo_alive = 0;
 	pthread_mutex_unlock(&table->death_check);
 	pthread_mutex_lock(&table->write_message);
-	printf("\033[0;31m%llu %i is died\n\033[0m", \
+	printf("\033[0;31m%llu\t%i is died\n\033[0m", \
 		(get_time() - table->start), table->philo[i].index + 1);
 	pthread_mutex_unlock(&table->write_message);
 }

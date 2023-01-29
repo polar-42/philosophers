@@ -3,67 +3,58 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fle-tolg  <fle-tolg@student.42angouleme    +#+  +:+       +#+        */
+/*   By: fle-tolg <fle-tolg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/07 11:32:50 by fle-tolg          #+#    #+#             */
-/*   Updated: 2022/12/21 15:11:59 by fle-tolg         ###   ########.fr       */
+/*   Updated: 2023/01/10 10:21:20 by fle-tolg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philosophers.h"
 
-void	*death_check(void *arg)
+void eat_philo_2(t_philo *philo)
 {
-	t_table		*table;
-	int			i;
-
-	table = (t_table *)arg;
-	i = 0;
-	pthread_mutex_lock(&table->death_check);
-	while (table->is_all_philo_alive == 1)
+	if (philo->table->time_to_die < philo->table->time_to_eat)
 	{
-		pthread_mutex_unlock(&table->death_check);
-		usleep(10000);
-		pthread_mutex_lock(&table->time_eat);
-		if ((get_time() - table->philo[i].last_meat) > table->time_to_die)
-		{
-			loop_death(table, i);
-			return (0);
-		}
-		pthread_mutex_unlock(&table->time_eat);
-		i++;
-		if (i >= table->total_philo)
-			i = 0;
-		pthread_mutex_lock(&table->death_check);
+		pthread_mutex_unlock(&philo->table->forks[philo->fork_right]);
+		pthread_mutex_unlock(&philo->table->forks[philo->fork_left]);
+		usleep((philo->table->time_to_die + 100) * 1000);
+		return;
 	}
-	pthread_mutex_unlock(&table->death_check);
-	return (0);
-}
-
-void	eat_philo(t_philo *philo)
-{
-	pthread_mutex_lock(&philo->table->forks[philo->fork_right]);
-	print_action(philo, "has taken a fork", "\033[0;34m");
-	pthread_mutex_lock(&philo->table->forks[philo->fork_left]);
-	print_action(philo, "has taken a fork", "\033[0;34m");
-	print_action(philo, "is eating", "\033[0;33m");
-	pthread_mutex_lock(&philo->table->time_eat);
-	philo->last_meat = get_time();
-	pthread_mutex_unlock(&philo->table->time_eat);
-	usleep(philo->table->time_to_eat * 1000);
+	else
+		wait_time(philo->table->time_to_eat * 1000, philo);
 	pthread_mutex_unlock(&philo->table->forks[philo->fork_right]);
 	pthread_mutex_unlock(&philo->table->forks[philo->fork_left]);
 	pthread_mutex_lock(&philo->n_meat);
 	philo->number_meat++;
 	pthread_mutex_unlock(&philo->n_meat);
 	print_action(philo, "is sleeping", "\033[0;32m");
-	usleep(philo->table->time_to_sleep * 1000);
+	wait_time(philo->table->time_to_sleep * 1000, philo);
 	print_action(philo, "is thinking", "\033[0;36m");
 }
 
-void	*thread_philo(void *arg)
+void eat_philo(t_philo *philo)
 {
-	t_philo	*philo;
+	pthread_mutex_lock(&philo->table->forks[philo->fork_right]);
+	print_action(philo, "has taken a fork", "\033[0;34m");
+	if (philo->table->total_philo == 1)
+	{
+		pthread_mutex_unlock(&philo->table->forks[philo->fork_right]);
+		usleep(philo->table->time_to_die * 1000);
+		return;
+	}
+	pthread_mutex_lock(&philo->table->forks[philo->fork_left]);
+	print_action(philo, "has taken a fork", "\033[0;34m");
+	print_action(philo, "is eating", "\033[0;33m");
+	pthread_mutex_lock(&philo->table->time_eat);
+	philo->last_meat = get_time();
+	pthread_mutex_unlock(&philo->table->time_eat);
+	eat_philo_2(philo);
+}
+
+void *thread_philo(void *arg)
+{
+	t_philo *philo;
 
 	philo = (t_philo *)arg;
 	if (philo->index % 2 != 0)
@@ -79,10 +70,10 @@ void	*thread_philo(void *arg)
 	return (0);
 }
 
-int	philosophers(t_table *table, t_philo *philo)
+int philosophers(t_table *table, t_philo *philo)
 {
-	int		i;
-	int		tmp;
+	int i;
+	int tmp;
 
 	all_thinking(table);
 	i = pthread_create(&table->death, NULL, death_check, table);
@@ -104,10 +95,10 @@ int	philosophers(t_table *table, t_philo *philo)
 	return (0);
 }
 
-int	main(int argc, char **argv)
+int main(int argc, char **argv)
 {
-	t_table				*table;
-	t_philo				*philo;
+	t_table *table;
+	t_philo *philo;
 
 	if (check_arg(argc, argv) == 0)
 	{

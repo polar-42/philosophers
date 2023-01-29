@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   initialize_utils.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fle-tolg  <fle-tolg@student.42angouleme    +#+  +:+       +#+        */
+/*   By: fle-tolg <fle-tolg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/08 11:37:41 by fle-tolg          #+#    #+#             */
-/*   Updated: 2022/12/21 14:48:35 by fle-tolg         ###   ########.fr       */
+/*   Updated: 2023/01/07 14:26:36 by fle-tolg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ t_philo	get_info_philo(t_table *table, int i)
 	philo.fork_left = i - 1;
 	if ((i - 1) < 0)
 		philo.fork_left = table->total_philo - 1;
+	if (table->total_philo == 1)
+		philo.fork_left = -1;
 	philo.number_meat = 0;
 	pthread_mutex_init(&philo.n_meat, NULL);
 	philo.last_meat = get_time();

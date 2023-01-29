@@ -1,0 +1,61 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: fle-tolg <fle-tolg@student.42.fr>          +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2022/09/27 11:57:23 by fle-tolg          #+#    #+#              #
+#    Updated: 2023/01/07 11:32:02 by fle-tolg         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+RED = \033[0;31m
+GREEN = \033[0;32m
+BLUE = \033[0;34m
+END = \033[0m
+
+NAME = philo
+
+CFLAGS = -Wextra -Wall -Werror
+
+PFLAGS = -pthread
+
+CC = clang -g
+
+RM = rm -f
+
+OBJ = $(SRC:.c=.o)
+
+SRC = 	sources/main.c\
+		sources/initialize_utils.c\
+		sources/philo_utils.c\
+		sources/thread_utils.c\
+		sources/time_utils.c\
+		sources/philo_actions.c\
+		sources/table_utils.c
+
+all : $(NAME) $(LIBFT)
+
+%.o: %.c
+	@$(CC) $(CFLAGS) $(PFLAGS) -c -o $@ $<
+
+$(NAME) : ${OBJ}
+	@$(CC) $(CFLAGS) $(PFLAGS) $(OBJ) -o $(NAME)
+	@echo "${GREEN}$(NAME) compilated with success"
+
+clean :
+	@$(RM) $(OBJ)
+	@echo "${RED}$(NAME) clean"
+
+fclean :
+	@$(RM) $(OBJ) $(NAME)
+	@echo "${RED}$(NAME) fclean"
+
+norme :
+	norminette
+
+re :	fclean all
+
+.PHONY :
+	all clean fclean norme re

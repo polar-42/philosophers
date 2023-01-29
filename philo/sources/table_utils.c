@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   table_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fle-tolg  <fle-tolg@student.42angouleme    +#+  +:+       +#+        */
+/*   By: fle-tolg <fle-tolg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/09 15:19:45 by fle-tolg          #+#    #+#             */
-/*   Updated: 2022/12/21 14:29:12 by fle-tolg         ###   ########.fr       */
+/*   Updated: 2023/01/07 14:28:36 by fle-tolg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ pthread_mutex_t	*init_mutex(int total_philo)
 	int					i;
 	pthread_mutex_t		*forks;
 
-	forks = malloc((total_philo) * sizeof(pthread_mutex_t));
+	forks = malloc((total_philo + 1) * sizeof(pthread_mutex_t));
 	if (!forks)
 		return (NULL);
 	i = 0;

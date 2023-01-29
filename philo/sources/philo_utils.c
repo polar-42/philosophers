@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fle-tolg  <fle-tolg@student.42angouleme    +#+  +:+       +#+        */
+/*   By: fle-tolg <fle-tolg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/07 13:53:34 by fle-tolg          #+#    #+#             */
-/*   Updated: 2022/12/21 14:52:25 by fle-tolg         ###   ########.fr       */
+/*   Updated: 2023/01/07 11:53:57 by fle-tolg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,16 +58,16 @@ int	check_arg(int argc, char **argv)
 {
 	if (argc != 5 && argc != 6)
 		return (0);
-	if (ft_atol(argv[1]) <= 0 || ft_atol(argv[1]) >= 2147483647
-		|| ft_atol(argv[2]) <= 0 || ft_atol(argv[2]) >= 2147483647
-		|| ft_atol(argv[3]) <= 0 || ft_atol(argv[3]) >= 2147483647
-		|| ft_atol(argv[4]) <= 0 || ft_atol(argv[4]) >= 2147483647)
+	if (ft_atol(argv[1]) <= 0 || ft_atol(argv[1]) > 2147483647
+		|| ft_atol(argv[2]) <= 0 || ft_atol(argv[2]) > 2147483647
+		|| ft_atol(argv[3]) <= 0 || ft_atol(argv[3]) > 2147483647
+		|| ft_atol(argv[4]) <= 0 || ft_atol(argv[4]) > 2147483647)
 		return (0);
 	if (ft_strlen(argv[1]) >= 12 || ft_strlen(argv[2]) >= 12
 		|| ft_strlen(argv[3]) >= 12 || ft_strlen(argv[4]) >= 12)
 		return (0);
 	if (argv[5])
-		if (ft_atol(argv[5]) <= 0 || ft_atol(argv[5]) >= 2147483647)
+		if (ft_atol(argv[5]) <= 0 || ft_atol(argv[5]) > 2147483647)
 			return (0);
 	return (1);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fle-tolg  <fle-tolg@student.42angouleme    +#+  +:+       +#+        */
+/*   By: fle-tolg <fle-tolg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/07 11:35:24 by fle-tolg          #+#    #+#             */
-/*   Updated: 2022/12/21 15:11:57 by fle-tolg         ###   ########.fr       */
+/*   Updated: 2023/01/09 16:28:29 by fle-tolg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ long int			ft_atol(const char *str);
 
 unsigned long long	get_time(void);
 
+void				wait_time(unsigned long long time, t_philo *philo);
 void				free_all(t_table *table);
 void				destroy_mutex(t_table *table);
 void				loop_death(t_table *table, int i);
